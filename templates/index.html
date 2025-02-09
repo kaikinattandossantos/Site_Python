@@ -12,20 +12,21 @@
     <ul id="suggestions"></ul>
 
     <script>
-        async function searchSuggestions() {
-            let query = document.getElementById("searchInput").value;
+        document.getElementById("searchInput").addEventListener("input", async function() {
+            let query = this.value.trim();
             let suggestionsList = document.getElementById("suggestions");
-
+    
             if (query.length === 0) {
                 suggestionsList.innerHTML = "";
                 return;
             }
-
+    
             try {
                 let response = await fetch(`/search?query=${query}`);
                 let suggestions = await response.json();
-
+    
                 suggestionsList.innerHTML = "";  
+    
                 suggestions.forEach(suggestion => {
                     let li = document.createElement("li");
                     li.textContent = suggestion;
@@ -35,11 +36,22 @@
                     };
                     suggestionsList.appendChild(li);
                 });
-
+    
             } catch (error) {
                 console.error("Erro ao buscar sugestões:", error);
             }
-        }
+        });
+    
+        // Adicionar evento para pressionar ENTER e buscar
+        document.getElementById("searchInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                let searchTerm = this.value.trim();
+                if (searchTerm) {
+                    window.location.href = `/result?query=${searchTerm}`;  // Redireciona para uma nova página com o resultado
+                }
+            }
+        });
     </script>
+    
 </body>
 </html>

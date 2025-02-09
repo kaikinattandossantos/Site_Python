@@ -15,20 +15,10 @@ def index():
     return render_template("index.html")  # Renderiza o HTML
 
 
-@app.route('/serching', methods=['GET'])
-def search_suggestions():
-    query = request.args.get('query', '').lower()
-
-    # Buscar termos similares no banco
-    suggestions = [tema for tema in temas if query in tema.lower()]
-
-    # Correção automática
-    if not suggestions:
-        melhor_correcao = process.extractOne(query, temas)
-        if melhor_correcao and melhor_correcao[1] > 80:  # Se for muito parecido
-            suggestions.append(melhor_correcao[0])
-
-    return jsonify(suggestions)
+@app.route('/result')
+def search_result():
+    query = request.args.get('query', '')
+    return render_template("result.html", query=query)
 
 if __name__ == '__main__':
     app.run(debug=True)
