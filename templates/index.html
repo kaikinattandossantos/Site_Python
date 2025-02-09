@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa Inteligente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Pesquisa Inteligente</h1>
+    <input type="text" id="searchInput" placeholder="Digite um tema..." oninput="searchSuggestions()">
+    <ul id="suggestions"></ul>
+
+    <script>
+        async function searchSuggestions() {
+            let query = document.getElementById("searchInput").value;
+            let suggestionsList = document.getElementById("suggestions");
+
+            if (query.length === 0) {
+                suggestionsList.innerHTML = "";
+                return;
+            }
+
+            try {
+                let response = await fetch(`/search?query=${query}`);
+                let suggestions = await response.json();
+
+                suggestionsList.innerHTML = "";  
+                suggestions.forEach(suggestion => {
+                    let li = document.createElement("li");
+                    li.textContent = suggestion;
+                    li.onclick = () => {
+                        document.getElementById("searchInput").value = suggestion;
+                        suggestionsList.innerHTML = "";
+                    };
+                    suggestionsList.appendChild(li);
+                });
+
+            } catch (error) {
+                console.error("Erro ao buscar sugestões:", error);
+            }
+        }
+    </script>
+</body>
+</html>
