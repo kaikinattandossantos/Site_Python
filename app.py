@@ -20,9 +20,6 @@ class Tema(db.Model):
 with app.app_context():
     db.create_all()
     
-    # Lista de temas a serem adicionados, caso o banco esteja vazio
-    temas = ["Python", "Java", "JavaScript", "Machine Learning", "Banco de Dados", "Inteligência Artificial"]
-    
     if Tema.query.count() == 0:  # Evita duplicação
         for nome in temas:
             db.session.add(Tema(nome=nome))
